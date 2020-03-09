@@ -1,14 +1,13 @@
 package com.douyu.config;
 
-import com.douyu.pojo.User;
 import com.douyu.service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,8 +37,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/product/**").hasRole("USER")
+                //产品相关
+                .antMatchers("/product/**").access("hasAnyRole('ADMIN','USER')")
+                //管理相关
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                //分配角色相关
+                .antMatchers("/assign/**").hasRole("ADMIN")
+                //添加用户
+                .antMatchers(HttpMethod.POST,"/user/**").access("hasAnyRole('ADMIN','USER')")
+                //删除用户
+                .antMatchers(HttpMethod.DELETE,"/user/**").hasRole("ADMIN")
+                //修改用户
+                .antMatchers(HttpMethod.PUT,"/user/**").access("hasAnyRole('ADMIN','USER')")
+                //查找用户
+                .antMatchers(HttpMethod.GET,"/user/**").access("hasAnyRole('ADMIN')")
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -2,9 +2,12 @@ package com.douyu.dao;
 
 import com.douyu.pojo.Role;
 import com.douyu.pojo.RoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface RoleMapper {
     int countByExample(RoleExample example);
 
