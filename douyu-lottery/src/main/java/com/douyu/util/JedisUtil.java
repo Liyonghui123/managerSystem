@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPool;
  * @time: 2020/3/10 12:33
  */
 @Component
-public class JedisUtil {
+public  class JedisUtil {
     @Autowired
     private JedisPool jedisPool;
 

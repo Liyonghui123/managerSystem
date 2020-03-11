@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douyu.dao.LotteryManagementMapper" >
+  <resultMap id="BaseResultMap" type="com.douyu.pojo.LotteryManagement" >
+    <id column="LOTTERY_ID" property="lotteryId" jdbcType="VARCHAR" />
+    <result column="LOTTERY_NAME" property="lotteryName" jdbcType="VARCHAR" />
+    <result column="SPONSOR_POINT" property="sponsorPoint" jdbcType="INTEGER" />
+    <result column="LOTTERY_TYPE" property="lotteryType" jdbcType="INTEGER" />
+    <result column="LOTTERY_POINT" property="lotteryPoint" jdbcType="INTEGER" />
+    <result column="START_DATE" property="startDate" jdbcType="DATE" />
+    <result column="STOP_DATE" property="stopDate" jdbcType="DATE" />
+    <result column="LOTTERY_TOTAIL_NUM" property="lotteryTotailNum" jdbcType="INTEGER" />
+    <result column="LOTTERY_SURPLUS_NUM" property="lotterySurplusNum" jdbcType="INTEGER" />
+    <result column="LOTTERY_NUM" property="lotteryNum" jdbcType="INTEGER" />
+    <result column="LOTTERY_OVER" property="lotteryOver" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    LOTTERY_ID, LOTTERY_NAME, SPONSOR_POINT, LOTTERY_TYPE, LOTTERY_POINT, START_DATE, 
+    STOP_DATE, LOTTERY_TOTAIL_NUM, LOTTERY_SURPLUS_NUM, LOTTERY_NUM, LOTTERY_OVER, CREATE_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.douyu.pojo.LotteryManagementExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from lottery_management
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from lottery_management
+    where LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from lottery_management
+    where LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.douyu.pojo.LotteryManagementExample" >
+    delete from lottery_management
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.douyu.pojo.LotteryManagement" >
+    insert into lottery_management (LOTTERY_ID, LOTTERY_NAME, SPONSOR_POINT, 
+      LOTTERY_TYPE, LOTTERY_POINT, START_DATE, 
+      STOP_DATE, LOTTERY_TOTAIL_NUM, LOTTERY_SURPLUS_NUM, 
+      LOTTERY_NUM, LOTTERY_OVER, CREATE_TIME
+      )
+    values (#{lotteryId,jdbcType=VARCHAR}, #{lotteryName,jdbcType=VARCHAR}, #{sponsorPoint,jdbcType=INTEGER}, 
+      #{lotteryType,jdbcType=INTEGER}, #{lotteryPoint,jdbcType=INTEGER}, #{startDate,jdbcType=DATE}, 
+      #{stopDate,jdbcType=DATE}, #{lotteryTotailNum,jdbcType=INTEGER}, #{lotterySurplusNum,jdbcType=INTEGER}, 
+      #{lotteryNum,jdbcType=INTEGER}, #{lotteryOver,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.douyu.pojo.LotteryManagement" >
+    insert into lottery_management
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lotteryId != null" >
+        LOTTERY_ID,
+      </if>
+      <if test="lotteryName != null" >
+        LOTTERY_NAME,
+      </if>
+      <if test="sponsorPoint != null" >
+        SPONSOR_POINT,
+      </if>
+      <if test="lotteryType != null" >
+        LOTTERY_TYPE,
+      </if>
+      <if test="lotteryPoint != null" >
+        LOTTERY_POINT,
+      </if>
+      <if test="startDate != null" >
+        START_DATE,
+      </if>
+      <if test="stopDate != null" >
+        STOP_DATE,
+      </if>
+      <if test="lotteryTotailNum != null" >
+        LOTTERY_TOTAIL_NUM,
+      </if>
+      <if test="lotterySurplusNum != null" >
+        LOTTERY_SURPLUS_NUM,
+      </if>
+      <if test="lotteryNum != null" >
+        LOTTERY_NUM,
+      </if>
+      <if test="lotteryOver != null" >
+        LOTTERY_OVER,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lotteryId != null" >
+        #{lotteryId,jdbcType=VARCHAR},
+      </if>
+      <if test="lotteryName != null" >
+        #{lotteryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sponsorPoint != null" >
+        #{sponsorPoint,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryType != null" >
+        #{lotteryType,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryPoint != null" >
+        #{lotteryPoint,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="stopDate != null" >
+        #{stopDate,jdbcType=DATE},
+      </if>
+      <if test="lotteryTotailNum != null" >
+        #{lotteryTotailNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotterySurplusNum != null" >
+        #{lotterySurplusNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryNum != null" >
+        #{lotteryNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryOver != null" >
+        #{lotteryOver,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.douyu.pojo.LotteryManagementExample" resultType="java.lang.Integer" >
+    select count(*) from lottery_management
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update lottery_management
+    <set >
+      <if test="record.lotteryId != null" >
+        LOTTERY_ID = #{record.lotteryId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lotteryName != null" >
+        LOTTERY_NAME = #{record.lotteryName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sponsorPoint != null" >
+        SPONSOR_POINT = #{record.sponsorPoint,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotteryType != null" >
+        LOTTERY_TYPE = #{record.lotteryType,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotteryPoint != null" >
+        LOTTERY_POINT = #{record.lotteryPoint,jdbcType=INTEGER},
+      </if>
+      <if test="record.startDate != null" >
+        START_DATE = #{record.startDate,jdbcType=DATE},
+      </if>
+      <if test="record.stopDate != null" >
+        STOP_DATE = #{record.stopDate,jdbcType=DATE},
+      </if>
+      <if test="record.lotteryTotailNum != null" >
+        LOTTERY_TOTAIL_NUM = #{record.lotteryTotailNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotterySurplusNum != null" >
+        LOTTERY_SURPLUS_NUM = #{record.lotterySurplusNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotteryNum != null" >
+        LOTTERY_NUM = #{record.lotteryNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotteryOver != null" >
+        LOTTERY_OVER = #{record.lotteryOver,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update lottery_management
+    set LOTTERY_ID = #{record.lotteryId,jdbcType=VARCHAR},
+      LOTTERY_NAME = #{record.lotteryName,jdbcType=VARCHAR},
+      SPONSOR_POINT = #{record.sponsorPoint,jdbcType=INTEGER},
+      LOTTERY_TYPE = #{record.lotteryType,jdbcType=INTEGER},
+      LOTTERY_POINT = #{record.lotteryPoint,jdbcType=INTEGER},
+      START_DATE = #{record.startDate,jdbcType=DATE},
+      STOP_DATE = #{record.stopDate,jdbcType=DATE},
+      LOTTERY_TOTAIL_NUM = #{record.lotteryTotailNum,jdbcType=INTEGER},
+      LOTTERY_SURPLUS_NUM = #{record.lotterySurplusNum,jdbcType=INTEGER},
+      LOTTERY_NUM = #{record.lotteryNum,jdbcType=INTEGER},
+      LOTTERY_OVER = #{record.lotteryOver,jdbcType=INTEGER},
+      CREATE_TIME = #{record.createTime,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.douyu.pojo.LotteryManagement" >
+    update lottery_management
+    <set >
+      <if test="lotteryName != null" >
+        LOTTERY_NAME = #{lotteryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sponsorPoint != null" >
+        SPONSOR_POINT = #{sponsorPoint,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryType != null" >
+        LOTTERY_TYPE = #{lotteryType,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryPoint != null" >
+        LOTTERY_POINT = #{lotteryPoint,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        START_DATE = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="stopDate != null" >
+        STOP_DATE = #{stopDate,jdbcType=DATE},
+      </if>
+      <if test="lotteryTotailNum != null" >
+        LOTTERY_TOTAIL_NUM = #{lotteryTotailNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotterySurplusNum != null" >
+        LOTTERY_SURPLUS_NUM = #{lotterySurplusNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryNum != null" >
+        LOTTERY_NUM = #{lotteryNum,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryOver != null" >
+        LOTTERY_OVER = #{lotteryOver,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+    </set>
+    where LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.douyu.pojo.LotteryManagement" >
+    update lottery_management
+    set LOTTERY_NAME = #{lotteryName,jdbcType=VARCHAR},
+      SPONSOR_POINT = #{sponsorPoint,jdbcType=INTEGER},
+      LOTTERY_TYPE = #{lotteryType,jdbcType=INTEGER},
+      LOTTERY_POINT = #{lotteryPoint,jdbcType=INTEGER},
+      START_DATE = #{startDate,jdbcType=DATE},
+      STOP_DATE = #{stopDate,jdbcType=DATE},
+      LOTTERY_TOTAIL_NUM = #{lotteryTotailNum,jdbcType=INTEGER},
+      LOTTERY_SURPLUS_NUM = #{lotterySurplusNum,jdbcType=INTEGER},
+      LOTTERY_NUM = #{lotteryNum,jdbcType=INTEGER},
+      LOTTERY_OVER = #{lotteryOver,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=DATE}
+    where LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR}
+  </update>
+</mapper>

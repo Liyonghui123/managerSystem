@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douyu.dao.PrizeMapper" >
+  <resultMap id="BaseResultMap" type="com.douyu.pojo.Prize" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="LOTTERY_ID" property="lotteryId" jdbcType="VARCHAR" />
+    <result column="PRIZE_TYPE" property="prizeType" jdbcType="INTEGER" />
+    <result column="CLASS_ID" property="classId" jdbcType="INTEGER" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ATTRIBUTES_ID" property="productAttributesId" jdbcType="VARCHAR" />
+    <result column="PRIZE_NAME" property="prizeName" jdbcType="VARCHAR" />
+    <result column="PRIZE_PRICE" property="prizePrice" jdbcType="DECIMAL" />
+    <result column="POINT" property="point" jdbcType="INTEGER" />
+    <result column="PRIZE_NUM" property="prizeNum" jdbcType="INTEGER" />
+    <result column="PRIZE_TOTAIL_POINT" property="prizeTotailPoint" jdbcType="INTEGER" />
+    <result column="PRIZE_LEV" property="prizeLev" jdbcType="INTEGER" />
+    <result column="PRIZE_PROBABILITY" property="prizeProbability" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.douyu.pojo.Prize" extends="BaseResultMap" >
+    <result column="REMARKS" property="remarks" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, LOTTERY_ID, PRIZE_TYPE, CLASS_ID, PRODUCT_ID, PRODUCT_ATTRIBUTES_ID, PRIZE_NAME, 
+    PRIZE_PRICE, POINT, PRIZE_NUM, PRIZE_TOTAIL_POINT, PRIZE_LEV, PRIZE_PROBABILITY, 
+    CREATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    REMARKS
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.douyu.pojo.PrizeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from prize
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.douyu.pojo.PrizeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from prize
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from prize
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from prize
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.douyu.pojo.PrizeExample" >
+    delete from prize
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.douyu.pojo.Prize" >
+    insert into prize (ID, LOTTERY_ID, PRIZE_TYPE, 
+      CLASS_ID, PRODUCT_ID, PRODUCT_ATTRIBUTES_ID, 
+      PRIZE_NAME, PRIZE_PRICE, POINT, 
+      PRIZE_NUM, PRIZE_TOTAIL_POINT, PRIZE_LEV, 
+      PRIZE_PROBABILITY, CREATE_TIME, REMARKS
+      )
+    values (#{id,jdbcType=INTEGER}, #{lotteryId,jdbcType=VARCHAR}, #{prizeType,jdbcType=INTEGER}, 
+      #{classId,jdbcType=INTEGER}, #{productId,jdbcType=VARCHAR}, #{productAttributesId,jdbcType=VARCHAR}, 
+      #{prizeName,jdbcType=VARCHAR}, #{prizePrice,jdbcType=DECIMAL}, #{point,jdbcType=INTEGER}, 
+      #{prizeNum,jdbcType=INTEGER}, #{prizeTotailPoint,jdbcType=INTEGER}, #{prizeLev,jdbcType=INTEGER}, 
+      #{prizeProbability,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}, #{remarks,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.douyu.pojo.Prize" >
+    insert into prize
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="lotteryId != null" >
+        LOTTERY_ID,
+      </if>
+      <if test="prizeType != null" >
+        PRIZE_TYPE,
+      </if>
+      <if test="classId != null" >
+        CLASS_ID,
+      </if>
+      <if test="productId != null" >
+        PRODUCT_ID,
+      </if>
+      <if test="productAttributesId != null" >
+        PRODUCT_ATTRIBUTES_ID,
+      </if>
+      <if test="prizeName != null" >
+        PRIZE_NAME,
+      </if>
+      <if test="prizePrice != null" >
+        PRIZE_PRICE,
+      </if>
+      <if test="point != null" >
+        POINT,
+      </if>
+      <if test="prizeNum != null" >
+        PRIZE_NUM,
+      </if>
+      <if test="prizeTotailPoint != null" >
+        PRIZE_TOTAIL_POINT,
+      </if>
+      <if test="prizeLev != null" >
+        PRIZE_LEV,
+      </if>
+      <if test="prizeProbability != null" >
+        PRIZE_PROBABILITY,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryId != null" >
+        #{lotteryId,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeType != null" >
+        #{prizeType,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productAttributesId != null" >
+        #{productAttributesId,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeName != null" >
+        #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizePrice != null" >
+        #{prizePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=INTEGER},
+      </if>
+      <if test="prizeNum != null" >
+        #{prizeNum,jdbcType=INTEGER},
+      </if>
+      <if test="prizeTotailPoint != null" >
+        #{prizeTotailPoint,jdbcType=INTEGER},
+      </if>
+      <if test="prizeLev != null" >
+        #{prizeLev,jdbcType=INTEGER},
+      </if>
+      <if test="prizeProbability != null" >
+        #{prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.douyu.pojo.PrizeExample" resultType="java.lang.Integer" >
+    select count(*) from prize
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update prize
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.lotteryId != null" >
+        LOTTERY_ID = #{record.lotteryId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeType != null" >
+        PRIZE_TYPE = #{record.prizeType,jdbcType=INTEGER},
+      </if>
+      <if test="record.classId != null" >
+        CLASS_ID = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productId != null" >
+        PRODUCT_ID = #{record.productId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productAttributesId != null" >
+        PRODUCT_ATTRIBUTES_ID = #{record.productAttributesId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeName != null" >
+        PRIZE_NAME = #{record.prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizePrice != null" >
+        PRIZE_PRICE = #{record.prizePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.point != null" >
+        POINT = #{record.point,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeNum != null" >
+        PRIZE_NUM = #{record.prizeNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeTotailPoint != null" >
+        PRIZE_TOTAIL_POINT = #{record.prizeTotailPoint,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeLev != null" >
+        PRIZE_LEV = #{record.prizeLev,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeProbability != null" >
+        PRIZE_PROBABILITY = #{record.prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      </if>
+      <if test="record.remarks != null" >
+        REMARKS = #{record.remarks,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update prize
+    set ID = #{record.id,jdbcType=INTEGER},
+      LOTTERY_ID = #{record.lotteryId,jdbcType=VARCHAR},
+      PRIZE_TYPE = #{record.prizeType,jdbcType=INTEGER},
+      CLASS_ID = #{record.classId,jdbcType=INTEGER},
+      PRODUCT_ID = #{record.productId,jdbcType=VARCHAR},
+      PRODUCT_ATTRIBUTES_ID = #{record.productAttributesId,jdbcType=VARCHAR},
+      PRIZE_NAME = #{record.prizeName,jdbcType=VARCHAR},
+      PRIZE_PRICE = #{record.prizePrice,jdbcType=DECIMAL},
+      POINT = #{record.point,jdbcType=INTEGER},
+      PRIZE_NUM = #{record.prizeNum,jdbcType=INTEGER},
+      PRIZE_TOTAIL_POINT = #{record.prizeTotailPoint,jdbcType=INTEGER},
+      PRIZE_LEV = #{record.prizeLev,jdbcType=INTEGER},
+      PRIZE_PROBABILITY = #{record.prizeProbability,jdbcType=DECIMAL},
+      CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      REMARKS = #{record.remarks,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update prize
+    set ID = #{record.id,jdbcType=INTEGER},
+      LOTTERY_ID = #{record.lotteryId,jdbcType=VARCHAR},
+      PRIZE_TYPE = #{record.prizeType,jdbcType=INTEGER},
+      CLASS_ID = #{record.classId,jdbcType=INTEGER},
+      PRODUCT_ID = #{record.productId,jdbcType=VARCHAR},
+      PRODUCT_ATTRIBUTES_ID = #{record.productAttributesId,jdbcType=VARCHAR},
+      PRIZE_NAME = #{record.prizeName,jdbcType=VARCHAR},
+      PRIZE_PRICE = #{record.prizePrice,jdbcType=DECIMAL},
+      POINT = #{record.point,jdbcType=INTEGER},
+      PRIZE_NUM = #{record.prizeNum,jdbcType=INTEGER},
+      PRIZE_TOTAIL_POINT = #{record.prizeTotailPoint,jdbcType=INTEGER},
+      PRIZE_LEV = #{record.prizeLev,jdbcType=INTEGER},
+      PRIZE_PROBABILITY = #{record.prizeProbability,jdbcType=DECIMAL},
+      CREATE_TIME = #{record.createTime,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.douyu.pojo.Prize" >
+    update prize
+    <set >
+      <if test="lotteryId != null" >
+        LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeType != null" >
+        PRIZE_TYPE = #{prizeType,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        CLASS_ID = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        PRODUCT_ID = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productAttributesId != null" >
+        PRODUCT_ATTRIBUTES_ID = #{productAttributesId,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeName != null" >
+        PRIZE_NAME = #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizePrice != null" >
+        PRIZE_PRICE = #{prizePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="point != null" >
+        POINT = #{point,jdbcType=INTEGER},
+      </if>
+      <if test="prizeNum != null" >
+        PRIZE_NUM = #{prizeNum,jdbcType=INTEGER},
+      </if>
+      <if test="prizeTotailPoint != null" >
+        PRIZE_TOTAIL_POINT = #{prizeTotailPoint,jdbcType=INTEGER},
+      </if>
+      <if test="prizeLev != null" >
+        PRIZE_LEV = #{prizeLev,jdbcType=INTEGER},
+      </if>
+      <if test="prizeProbability != null" >
+        PRIZE_PROBABILITY = #{prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.douyu.pojo.Prize" >
+    update prize
+    set LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR},
+      PRIZE_TYPE = #{prizeType,jdbcType=INTEGER},
+      CLASS_ID = #{classId,jdbcType=INTEGER},
+      PRODUCT_ID = #{productId,jdbcType=VARCHAR},
+      PRODUCT_ATTRIBUTES_ID = #{productAttributesId,jdbcType=VARCHAR},
+      PRIZE_NAME = #{prizeName,jdbcType=VARCHAR},
+      PRIZE_PRICE = #{prizePrice,jdbcType=DECIMAL},
+      POINT = #{point,jdbcType=INTEGER},
+      PRIZE_NUM = #{prizeNum,jdbcType=INTEGER},
+      PRIZE_TOTAIL_POINT = #{prizeTotailPoint,jdbcType=INTEGER},
+      PRIZE_LEV = #{prizeLev,jdbcType=INTEGER},
+      PRIZE_PROBABILITY = #{prizeProbability,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      REMARKS = #{remarks,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.douyu.pojo.Prize" >
+    update prize
+    set LOTTERY_ID = #{lotteryId,jdbcType=VARCHAR},
+      PRIZE_TYPE = #{prizeType,jdbcType=INTEGER},
+      CLASS_ID = #{classId,jdbcType=INTEGER},
+      PRODUCT_ID = #{productId,jdbcType=VARCHAR},
+      PRODUCT_ATTRIBUTES_ID = #{productAttributesId,jdbcType=VARCHAR},
+      PRIZE_NAME = #{prizeName,jdbcType=VARCHAR},
+      PRIZE_PRICE = #{prizePrice,jdbcType=DECIMAL},
+      POINT = #{point,jdbcType=INTEGER},
+      PRIZE_NUM = #{prizeNum,jdbcType=INTEGER},
+      PRIZE_TOTAIL_POINT = #{prizeTotailPoint,jdbcType=INTEGER},
+      PRIZE_LEV = #{prizeLev,jdbcType=INTEGER},
+      PRIZE_PROBABILITY = #{prizeProbability,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=DATE}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
