@@ -57,6 +57,6 @@
         可以设置为somepck.domainName，那么会自动把domainName类再放到somepck包里面；
         -->
 
-        <table tableName="winning_record" domainObjectName="WinningRecord"></table>
+        <table tableName="prize" domainObjectName="Prize"></table>
     </context>
 </generatorConfiguration>

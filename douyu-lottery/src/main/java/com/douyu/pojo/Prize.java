@@ -6,15 +6,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 @Data
 public class Prize {
-    public Prize(Integer id,Integer prizeNum) {
+    public Prize(Integer id,Integer val){
         this.id=id;
-        this.prizeNum=prizeNum;
+        this.val=val;
     }
+    private Integer val;
     private Integer id;
 
     private String lotteryId;
 
-    private Integer prizeType;
+    private String prizeType;
 
     private Integer classId;
 
@@ -39,6 +40,5 @@ public class Prize {
     private Date createTime;
 
     private String remarks;
-
-
 }
+

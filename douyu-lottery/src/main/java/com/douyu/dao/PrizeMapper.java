@@ -2,9 +2,12 @@ package com.douyu.dao;
 
 import com.douyu.pojo.Prize;
 import com.douyu.pojo.PrizeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface PrizeMapper {
     int countByExample(PrizeExample example);
 

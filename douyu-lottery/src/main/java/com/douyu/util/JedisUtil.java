@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import javax.annotation.PostConstruct;
+
 /**
  * @description:
  * @author: Dangerous
@@ -13,24 +15,28 @@ import redis.clients.jedis.JedisPool;
 @Component
 public  class JedisUtil {
     @Autowired
-    private JedisPool jedisPool;
-
+    private JedisPool testjedisPool;
+    private static JedisPool jedisPool;
+    @PostConstruct
+    public void init(){
+        jedisPool = this.testjedisPool;
+    }
     /**
      * 获取jedis
      * @return
      */
-    public Jedis getJedis(){
+    public static Jedis getJedis(){
         Jedis jedis = jedisPool.getResource();
         return jedis;
     }
-    public void returnJedis(Jedis jedis){
+    public static void returnJedis(Jedis jedis){
         jedis.close();
     }
     /**
      * 清空redis
      * @return
      */
-    public String flushAll() {
+    public static String flushAll() {
         Jedis jedis = jedisPool.getResource();
         try{
             return jedis.flushAll();
@@ -50,7 +56,7 @@ public  class JedisUtil {
      * @author hw
      * @date 2018年12月14日
      */
-    public String set(String key, String value) {
+    public static String set(String key, String value) {
         Jedis jedis = jedisPool.getResource();
         try {
             return jedis.set(key, value);
@@ -69,7 +75,7 @@ public  class JedisUtil {
      * @author hw
      * @date 2018年12月14日
      */
-    public String get(String key) {
+    public static String get(String key) {
         Jedis jedis = jedisPool.getResource();
         try {
             return jedis.get(key);
@@ -88,7 +94,7 @@ public  class JedisUtil {
      * @author hw
      * @date 2018年12月14日
      */
-    public Long del(String... keys) {
+    public static Long del(String... keys) {
         Jedis jedis = jedisPool.getResource();
         try {
             return jedis.del(keys);
@@ -108,7 +114,7 @@ public  class JedisUtil {
      * @author hw
      * @date 2018年12月14日
      */
-    public String setObject(String key, Object value) {
+    public static String setObject(String key, Object value) {
         Jedis jedis = jedisPool.getResource();
         try {
             return jedis.set(key.getBytes(), ObjectUtil.serialize(value));
@@ -127,7 +133,7 @@ public  class JedisUtil {
      * @author hw
      * @date 2018年12月14日
      */
-    public Object getObject(String key) {
+    public static Object getObject(String key) {
         Jedis jedis = jedisPool.getResource();
         try {
             byte[] byteArr =  jedis.get(key.getBytes());

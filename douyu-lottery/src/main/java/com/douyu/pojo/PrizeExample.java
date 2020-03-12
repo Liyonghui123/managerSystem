@@ -273,52 +273,62 @@ public class PrizeExample {
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeEqualTo(Integer value) {
+        public Criteria andPrizeTypeEqualTo(String value) {
             addCriterion("PRIZE_TYPE =", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeNotEqualTo(Integer value) {
+        public Criteria andPrizeTypeNotEqualTo(String value) {
             addCriterion("PRIZE_TYPE <>", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeGreaterThan(Integer value) {
+        public Criteria andPrizeTypeGreaterThan(String value) {
             addCriterion("PRIZE_TYPE >", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andPrizeTypeGreaterThanOrEqualTo(String value) {
             addCriterion("PRIZE_TYPE >=", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeLessThan(Integer value) {
+        public Criteria andPrizeTypeLessThan(String value) {
             addCriterion("PRIZE_TYPE <", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andPrizeTypeLessThanOrEqualTo(String value) {
             addCriterion("PRIZE_TYPE <=", value, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeIn(List<Integer> values) {
+        public Criteria andPrizeTypeLike(String value) {
+            addCriterion("PRIZE_TYPE like", value, "prizeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeTypeNotLike(String value) {
+            addCriterion("PRIZE_TYPE not like", value, "prizeType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeTypeIn(List<String> values) {
             addCriterion("PRIZE_TYPE in", values, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeNotIn(List<Integer> values) {
+        public Criteria andPrizeTypeNotIn(List<String> values) {
             addCriterion("PRIZE_TYPE not in", values, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeBetween(Integer value1, Integer value2) {
+        public Criteria andPrizeTypeBetween(String value1, String value2) {
             addCriterion("PRIZE_TYPE between", value1, value2, "prizeType");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andPrizeTypeNotBetween(String value1, String value2) {
             addCriterion("PRIZE_TYPE not between", value1, value2, "prizeType");
             return (Criteria) this;
         }
