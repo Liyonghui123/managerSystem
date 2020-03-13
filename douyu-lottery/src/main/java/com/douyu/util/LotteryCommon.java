@@ -3,7 +3,7 @@ package com.douyu.util;
 import com.douyu.pojo.LotteryManagement;
 import com.douyu.pojo.Prize;
 import com.douyu.pojo.Rule;
-import com.douyu.pojo.WinningRecord;
+import com.douyu.pojo.WinnerRecord;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -176,7 +176,6 @@ public class LotteryCommon {
 
         for (Prize obj : arr) {
 
-            // 排除无效奖品
             if (Integer.valueOf(String.valueOf(obj.getPoint())) > 0) {
 
                 // 被刺奖品的数量
@@ -331,7 +330,9 @@ public class LotteryCommon {
                         if (rule.getRestrictionType() == 0) {
                             if (jedis.get(engineerId)!=null) {
                                 int lunNum =Integer.valueOf(jedis.get(engineerId));
-                                if(rule.getNum()<= lunNum)flag ="E1";
+                                if(rule.getNum()<= lunNum){
+                                    flag ="E1";
+                                }
                             }
                         } else {
                             if (jedis.get(lotteryId+engineerId)!=null) {
@@ -360,7 +361,7 @@ public class LotteryCommon {
      * @param day
      * @return
      */
-    public static WinningRecord[] winningBeOverdue(WinningRecord[] data , int day ) {
+    public static WinnerRecord[] winningBeOverdue(WinnerRecord[] data , int day ) {
         Calendar ca = Calendar.getInstance();
         // num为增加的天数，可以改变的
         ca.add(Calendar.DATE, -day);

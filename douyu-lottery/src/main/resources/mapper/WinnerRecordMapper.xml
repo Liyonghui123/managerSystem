@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.douyu.dao.WinningRecordMapper" >
-  <resultMap id="BaseResultMap" type="com.douyu.pojo.WinningRecord" >
+<mapper namespace="com.douyu.dao.WinnerRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.douyu.pojo.WinnerRecord" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="PRIZE_ID" property="prizeId" jdbcType="VARCHAR" />
+    <result column="REDEEM_CODE" property="redeemCode" jdbcType="VARCHAR" />
     <result column="PRIZE_NAME" property="prizeName" jdbcType="VARCHAR" />
     <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
     <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
     <result column="PRIZE_NUM" property="prizeNum" jdbcType="INTEGER" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
     <result column="FIELD1" property="field1" jdbcType="VARCHAR" />
     <result column="FIELD2" property="field2" jdbcType="VARCHAR" />
     <result column="FIELD3" property="field3" jdbcType="VARCHAR" />
@@ -72,10 +73,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ID, PRIZE_ID, PRIZE_NAME, USER_ID, USER_NAME, PRIZE_NUM, CREATE_TIME, FIELD1, FIELD2, 
-    FIELD3
+    ID, PRIZE_ID, REDEEM_CODE, PRIZE_NAME, USER_ID, USER_NAME, PRIZE_NUM, CREATE_TIME, 
+    FIELD1, FIELD2, FIELD3
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.douyu.pojo.WinningRecordExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.douyu.pojo.WinnerRecordExample" >
     select
     <if test="distinct" >
       distinct
@@ -99,23 +100,23 @@
     delete from winning_record
     where ID = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.douyu.pojo.WinningRecordExample" >
+  <delete id="deleteByExample" parameterType="com.douyu.pojo.WinnerRecordExample" >
     delete from winning_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.douyu.pojo.WinningRecord" >
-    insert into winning_record (ID, PRIZE_ID, PRIZE_NAME, 
-      USER_ID, USER_NAME, PRIZE_NUM, 
-      CREATE_TIME, FIELD1, FIELD2, 
-      FIELD3)
-    values (#{id,jdbcType=INTEGER}, #{prizeId,jdbcType=VARCHAR}, #{prizeName,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{prizeNum,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=DATE}, #{field1,jdbcType=VARCHAR}, #{field2,jdbcType=VARCHAR}, 
-      #{field3,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.douyu.pojo.WinnerRecord" >
+    insert into winning_record (ID, PRIZE_ID, REDEEM_CODE, 
+      PRIZE_NAME, USER_ID, USER_NAME, 
+      PRIZE_NUM, CREATE_TIME, FIELD1, 
+      FIELD2, FIELD3)
+    values (#{id,jdbcType=INTEGER}, #{prizeId,jdbcType=VARCHAR}, #{redeemCode,jdbcType=VARCHAR}, 
+      #{prizeName,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{prizeNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{field1,jdbcType=VARCHAR}, 
+      #{field2,jdbcType=VARCHAR}, #{field3,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.douyu.pojo.WinningRecord" >
+  <insert id="insertSelective" parameterType="com.douyu.pojo.WinnerRecord" >
     insert into winning_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -123,6 +124,9 @@
       </if>
       <if test="prizeId != null" >
         PRIZE_ID,
+      </if>
+      <if test="redeemCode != null" >
+        REDEEM_CODE,
       </if>
       <if test="prizeName != null" >
         PRIZE_NAME,
@@ -156,6 +160,9 @@
       <if test="prizeId != null" >
         #{prizeId,jdbcType=VARCHAR},
       </if>
+      <if test="redeemCode != null" >
+        #{redeemCode,jdbcType=VARCHAR},
+      </if>
       <if test="prizeName != null" >
         #{prizeName,jdbcType=VARCHAR},
       </if>
@@ -169,7 +176,7 @@
         #{prizeNum,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=DATE},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="field1 != null" >
         #{field1,jdbcType=VARCHAR},
@@ -182,7 +189,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.douyu.pojo.WinningRecordExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.douyu.pojo.WinnerRecordExample" resultType="java.lang.Integer" >
     select count(*) from winning_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -197,6 +204,9 @@
       <if test="record.prizeId != null" >
         PRIZE_ID = #{record.prizeId,jdbcType=VARCHAR},
       </if>
+      <if test="record.redeemCode != null" >
+        REDEEM_CODE = #{record.redeemCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.prizeName != null" >
         PRIZE_NAME = #{record.prizeName,jdbcType=VARCHAR},
       </if>
@@ -210,7 +220,7 @@
         PRIZE_NUM = #{record.prizeNum,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null" >
-        CREATE_TIME = #{record.createTime,jdbcType=DATE},
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.field1 != null" >
         FIELD1 = #{record.field1,jdbcType=VARCHAR},
@@ -230,11 +240,12 @@
     update winning_record
     set ID = #{record.id,jdbcType=INTEGER},
       PRIZE_ID = #{record.prizeId,jdbcType=VARCHAR},
+      REDEEM_CODE = #{record.redeemCode,jdbcType=VARCHAR},
       PRIZE_NAME = #{record.prizeName,jdbcType=VARCHAR},
       USER_ID = #{record.userId,jdbcType=VARCHAR},
       USER_NAME = #{record.userName,jdbcType=VARCHAR},
       PRIZE_NUM = #{record.prizeNum,jdbcType=INTEGER},
-      CREATE_TIME = #{record.createTime,jdbcType=DATE},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
       FIELD1 = #{record.field1,jdbcType=VARCHAR},
       FIELD2 = #{record.field2,jdbcType=VARCHAR},
       FIELD3 = #{record.field3,jdbcType=VARCHAR}
@@ -242,11 +253,14 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.douyu.pojo.WinningRecord" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.douyu.pojo.WinnerRecord" >
     update winning_record
     <set >
       <if test="prizeId != null" >
         PRIZE_ID = #{prizeId,jdbcType=VARCHAR},
+      </if>
+      <if test="redeemCode != null" >
+        REDEEM_CODE = #{redeemCode,jdbcType=VARCHAR},
       </if>
       <if test="prizeName != null" >
         PRIZE_NAME = #{prizeName,jdbcType=VARCHAR},
@@ -261,7 +275,7 @@
         PRIZE_NUM = #{prizeNum,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        CREATE_TIME = #{createTime,jdbcType=DATE},
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="field1 != null" >
         FIELD1 = #{field1,jdbcType=VARCHAR},
@@ -275,14 +289,15 @@
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.douyu.pojo.WinningRecord" >
+  <update id="updateByPrimaryKey" parameterType="com.douyu.pojo.WinnerRecord" >
     update winning_record
     set PRIZE_ID = #{prizeId,jdbcType=VARCHAR},
+      REDEEM_CODE = #{redeemCode,jdbcType=VARCHAR},
       PRIZE_NAME = #{prizeName,jdbcType=VARCHAR},
       USER_ID = #{userId,jdbcType=VARCHAR},
       USER_NAME = #{userName,jdbcType=VARCHAR},
       PRIZE_NUM = #{prizeNum,jdbcType=INTEGER},
-      CREATE_TIME = #{createTime,jdbcType=DATE},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       FIELD1 = #{field1,jdbcType=VARCHAR},
       FIELD2 = #{field2,jdbcType=VARCHAR},
       FIELD3 = #{field3,jdbcType=VARCHAR}

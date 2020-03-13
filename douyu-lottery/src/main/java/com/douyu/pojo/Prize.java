@@ -40,5 +40,37 @@ public class Prize {
     private Date createTime;
 
     private String remarks;
+
+
+
+    @Override
+    public int hashCode() {
+        return val.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null){
+            return false;
+        }
+
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        Prize other = (Prize) obj;
+        if (val == null) {
+            if (other.val != null){
+                return false;
+            }
+
+        } else if (!val.equals(other.val)){
+            return false;
+        }
+        return true;
+
+    }
 }
 
