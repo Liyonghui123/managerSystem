@@ -3,6 +3,9 @@ package com.douyu.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Dangerous
+ */
 public class LotteryLevelExample {
     protected String orderByClause;
 
@@ -104,6 +107,66 @@ public class LotteryLevelExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andLevelIdIsNull() {
+            addCriterion("LEVEL_ID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdIsNotNull() {
+            addCriterion("LEVEL_ID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdEqualTo(Integer value) {
+            addCriterion("LEVEL_ID =", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdNotEqualTo(Integer value) {
+            addCriterion("LEVEL_ID <>", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdGreaterThan(Integer value) {
+            addCriterion("LEVEL_ID >", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("LEVEL_ID >=", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdLessThan(Integer value) {
+            addCriterion("LEVEL_ID <", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdLessThanOrEqualTo(Integer value) {
+            addCriterion("LEVEL_ID <=", value, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdIn(List<Integer> values) {
+            addCriterion("LEVEL_ID in", values, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdNotIn(List<Integer> values) {
+            addCriterion("LEVEL_ID not in", values, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdBetween(Integer value1, Integer value2) {
+            addCriterion("LEVEL_ID between", value1, value2, "levelId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLevelIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("LEVEL_ID not between", value1, value2, "levelId");
+            return (Criteria) this;
+        }
+
         public Criteria andLotteryIdIsNull() {
             addCriterion("LOTTERY_ID is null");
             return (Criteria) this;
@@ -114,52 +177,62 @@ public class LotteryLevelExample {
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdEqualTo(Integer value) {
+        public Criteria andLotteryIdEqualTo(String value) {
             addCriterion("LOTTERY_ID =", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdNotEqualTo(Integer value) {
+        public Criteria andLotteryIdNotEqualTo(String value) {
             addCriterion("LOTTERY_ID <>", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdGreaterThan(Integer value) {
+        public Criteria andLotteryIdGreaterThan(String value) {
             addCriterion("LOTTERY_ID >", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andLotteryIdGreaterThanOrEqualTo(String value) {
             addCriterion("LOTTERY_ID >=", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdLessThan(Integer value) {
+        public Criteria andLotteryIdLessThan(String value) {
             addCriterion("LOTTERY_ID <", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdLessThanOrEqualTo(Integer value) {
+        public Criteria andLotteryIdLessThanOrEqualTo(String value) {
             addCriterion("LOTTERY_ID <=", value, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdIn(List<Integer> values) {
+        public Criteria andLotteryIdLike(String value) {
+            addCriterion("LOTTERY_ID like", value, "lotteryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLotteryIdNotLike(String value) {
+            addCriterion("LOTTERY_ID not like", value, "lotteryId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLotteryIdIn(List<String> values) {
             addCriterion("LOTTERY_ID in", values, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdNotIn(List<Integer> values) {
+        public Criteria andLotteryIdNotIn(List<String> values) {
             addCriterion("LOTTERY_ID not in", values, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdBetween(Integer value1, Integer value2) {
+        public Criteria andLotteryIdBetween(String value1, String value2) {
             addCriterion("LOTTERY_ID between", value1, value2, "lotteryId");
             return (Criteria) this;
         }
 
-        public Criteria andLotteryIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andLotteryIdNotBetween(String value1, String value2) {
             addCriterion("LOTTERY_ID not between", value1, value2, "lotteryId");
             return (Criteria) this;
         }

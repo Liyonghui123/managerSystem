@@ -1,9 +1,6 @@
 package com.douyu.util;
 
-import com.douyu.pojo.LotteryManagement;
-import com.douyu.pojo.Prize;
-import com.douyu.pojo.Rule;
-import com.douyu.pojo.WinnerRecord;
+import com.douyu.pojo.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -17,8 +14,7 @@ import java.util.*;
  */
 public class LotteryCommon {
 
-    public static final String PRIZE_RULE = "prizeRule";
-    public static final String PRIZE_ID = "prizeId";
+    private static final String PRIZE_RULE = "prizeRule";
     public static final String PRIZE_LIST = "prizeList";
 
 
@@ -28,7 +24,7 @@ public class LotteryCommon {
      * @param data  抽奖活动obj
      * @return
      */
-    public  static HashMap<String, Object> calculation(Prize[] arr , LotteryManagement data) {
+    public static HashMap<String, Object> calculation(Prize[] arr , LotteryManagement data) {
 
         HashMap<String, Object> map =  new HashMap();
 
@@ -42,23 +38,23 @@ public class LotteryCommon {
         int sponsorPoint = 0;
 
         //非赞助本轮抽奖总次数
-        int lotteryTotailNum_F = 0;
+        int lotteryTotailNumF = 0;
 
         //非赞助本轮抽奖总次数
-        int lotteryTotailNum_T = 0;
+        int lotteryTotailNumT = 0;
 
         //纪律本轮循环谢谢惠顾的下标
         int index = 0;
 
         //非赞助本轮抽奖总次数
-        int NotZeroPointPrizeNum = 0;
+        int notZeroPointPrizeNum = 0;
 
         for (int i = 0; i < arr.length; i++) {
 
             //单个奖品的数量
             int prizeNum = arr[i].getPrizeNum();
 
-            lotteryTotailNum_T +=prizeNum;
+            lotteryTotailNumT +=prizeNum;
 
             //计算单个奖品总价值能量豆
             int a = prizeNum * arr[i].getPoint();
@@ -68,7 +64,7 @@ public class LotteryCommon {
 
             if (a>0) {
                 //记录有效奖品数量
-                NotZeroPointPrizeNum+=prizeNum;
+                notZeroPointPrizeNum+=prizeNum;
             } else {
                 index = i;
             }
@@ -76,18 +72,18 @@ public class LotteryCommon {
             arr[i].setPrizeTotailPoint(a);
         }
         //抽奖总次数
-        lotteryTotailNum_F = tailNum/lotteryPoint;
+        lotteryTotailNumF = tailNum/lotteryPoint;
 
         //0非赞助1赞助
         if (0 == data.getLotteryType()) {
             //
-            data.setLotteryTotailNum(lotteryTotailNum_F);
+            data.setLotteryTotailNum(lotteryTotailNumF);
 
-            arr[index].setPrizeNum(lotteryTotailNum_F - NotZeroPointPrizeNum);
+            arr[index].setPrizeNum(lotteryTotailNumF - notZeroPointPrizeNum);
         } else {
-            data.setLotteryTotailNum(lotteryTotailNum_T);
+            data.setLotteryTotailNum(lotteryTotailNumT);
 
-            sponsorPoint = (lotteryTotailNum_F - lotteryTotailNum_T)*lotteryPoint;
+            sponsorPoint = (lotteryTotailNumF - lotteryTotailNumT)*lotteryPoint;
 
         }
 
@@ -98,7 +94,7 @@ public class LotteryCommon {
             int prizeNum = arr[i].getPrizeNum();
 
             //精确到小数点后4位
-            BigDecimal d = new BigDecimal(prizeNum).divide(new BigDecimal(lotteryTotailNum_T), 4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal d = new BigDecimal(prizeNum).divide(new BigDecimal(lotteryTotailNumT), 4, BigDecimal.ROUND_HALF_UP);
 
 //			//本轮次抽奖活动建构总价值能量豆
             arr[i].setPrizeProbability(d);
@@ -134,14 +130,14 @@ public class LotteryCommon {
      * @param sponsorPoint
      * @param arr
      */
-    public static void cachePrizeListByLotteryId(String lotteryId,int sponsorPoint ,Prize[] arr) {
+    private static void cachePrizeListByLotteryId(String lotteryId,int sponsorPoint ,Prize[] arr) {
         Jedis jedis = JedisUtil.getJedis();
         try {
             //初始化本活动奖品抽奖次数
             jedis.set(lotteryId, "0");
 
             //奖品容器
-            HashSet<Prize> set = new HashSet<Prize>();
+            HashSet<Prize> set = new HashSet<>();
 
             randomSet(1, sponsorPoint, set, arr);
 
@@ -172,7 +168,7 @@ public class LotteryCommon {
      * @param arr 奖品列表
      * @return
      */
-    public  static HashSet<Prize> randomSet(int min, int max, HashSet<Prize> set, Prize[] arr) {
+    private static HashSet<Prize> randomSet(int min, int max, HashSet<Prize> set, Prize[] arr) {
 
         for (Prize obj : arr) {
 
@@ -195,6 +191,58 @@ public class LotteryCommon {
         return set;
     }
 
+    /**
+     * 判断抽奖次数
+     * @param arr
+     * @param lev
+     * @return
+    LOTTERY_ID	USER_LEVEL	LIMIT_TIME
+    1	        RMB大佬	        20
+    2	        红钻	            15
+    3	        橙钻	            13
+    4	        黄钻          	11
+    5	        绿钻	            9
+    6	        青钻	            7
+    7	        蓝钻	            5
+    8	        紫钻	            3
+    9	        平民	            1
+
+    //S成功 E1已超过限制抽奖次数！E2 抽奖已结束,已达到抽奖次数。
+     */
+    public  static String verifyNum(List<LotteryLevel> arr , int lev , String engineerId , String lotteryId, int lotteryTotailNum) {
+        String flag = "S";
+        Jedis jedis = JedisUtil.getJedis();
+        try{
+            //验证抽奖活动是否存在
+            if(jedis.get(lotteryId)!=null){
+
+                //验证抽奖活次数是否达到结束上限
+                if(Integer.valueOf(jedis.get(lotteryId)) >= lotteryTotailNum){
+                    flag = "E2";
+                    return  flag;
+                }
+            }
+            if(arr != null){
+                for (LotteryLevel rule : arr) {
+                    if (rule.getLevelId() == lev) {
+                        if (jedis.get(lotteryId+engineerId)!=null) {
+                            int lunNum =Integer.valueOf(jedis.get(lotteryId+engineerId));
+                            if(rule.getLimitTime()<= lunNum){
+                                flag ="E1";
+                            }
+                        }
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("VERIFY_NUM__RULE_ERROR_MSG=======================>" + e.getMessage());
+        } finally {
+            JedisUtil.returnJedis(jedis);
+        }
+        return flag;
+    }
+
 
 
     /**
@@ -202,7 +250,7 @@ public class LotteryCommon {
      * @param arr
      * @return
      */
-    public int ruleList(Rule[] arr ,String lotteryId ) {
+    public static int ruleList(List<LotteryLevel>  arr ,String lotteryId ) {
 
         Jedis jedis = JedisUtil.getJedis();
 
@@ -210,10 +258,10 @@ public class LotteryCommon {
 
             Pipeline p = jedis.pipelined();
             p.del(PRIZE_RULE+lotteryId);
-            for (int i = 0; i < arr.length; i++) {
-                Rule rule = arr[i];
-                p.sadd(PRIZE_RULE+lotteryId, PRIZE_RULE+lotteryId+rule.getEngineerLevel());
-                p.set(PRIZE_RULE+lotteryId+rule.getEngineerLevel(), rule.toString());
+            for (int i = 0; i < arr.size(); i++) {
+                LotteryLevel rule = arr.get(i);
+                p.sadd(PRIZE_RULE+lotteryId, PRIZE_RULE+lotteryId+rule.getUserLevel());
+                p.set(PRIZE_RULE+lotteryId+rule.getUserLevel(), rule.toString());
             }
             p.sync();
 
@@ -232,9 +280,9 @@ public class LotteryCommon {
      * @param lotteryId
      * @return
      */
-    public  Rule[] queryRuleList(String lotteryId) {
+    public  static LotteryLevel[] queryRuleList(String lotteryId) {
 
-        Rule[] ruleList = null;
+        LotteryLevel[] ruleList = null;
         Jedis jedis = JedisUtil.getJedis();
         try {
             Set<String> sets = jedis.smembers(PRIZE_RULE + lotteryId);
@@ -243,16 +291,17 @@ public class LotteryCommon {
                 p.get(str);
             }
             List<Object> list= p.syncAndReturnAll();
-            Rule rule = null;
+            LotteryLevel rule;
             if(list.size()>0){
-                ruleList = new Rule[list.size()];
+                ruleList = new LotteryLevel[list.size()];
                 for (int i = 0; i < list.size(); i++) {
                     String str = list.get(i).toString();
-                    String[] arr = str.substring(str.indexOf('[')+1, str.indexOf(']')).split(",");
-                    rule = new Rule();
-                    rule.setEngineerLevel(Integer.valueOf(arr[0].split("=")[1]));
-                    rule.setRestrictionType(Integer.valueOf(arr[1].split("=")[1]));
-                    rule.setNum(Integer.valueOf(arr[2].split("=")[1]));
+                    String[] arr = str.substring(str.indexOf('(')+1, str.indexOf(')')).split(",");
+                    rule = new LotteryLevel();
+                    rule.setLevelId(Integer.valueOf(arr[0].split("=")[1]));
+                    rule.setLotteryId(arr[1].split("=")[1]);
+                    rule.setUserLevel(arr[2].split("=")[1]);
+                    rule.setLimitTime(Integer.parseInt(arr[3].split("=")[1]));
                     ruleList[i]= rule;
                 }
             }
@@ -272,7 +321,7 @@ public class LotteryCommon {
      * @return
      */
     public static HashMap<String, String> getLotteryId(LotteryManagement[] arr) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         Date date = new Date();
         for (LotteryManagement dataObject : arr) {
             if(date.after(dataObject.getStartDate()) && date.before(dataObject.getStopDate())){
@@ -284,95 +333,4 @@ public class LotteryCommon {
         }
         return map;
     }
-
-
-
-    /**
-     * 判断抽奖次数
-     * @param arr
-     * @param lev
-     * @return
-    {id:"1", text:"其他"},
-    {id:"2", text:"达人"},
-    {id:"3", text:"宗师"},
-    {id:"4", text:"师尊"},
-    {id:"5", text:"大师"},
-    {id:"6", text:"师傅"}
-    var restrictionType = [
-    {id:"0", text:"每天"},
-    {id:"1", text:"每轮"},
-    ];
-     */
-    public  String verifyNum(Rule[] arr ,int lev , String engineerId ,String lotteryId,int lotteryTotailNum) {
-
-//		System.out.println("============>Rule:" + arr.length);
-//		System.out.println("============>lev:" + lev);
-//		System.out.println("============>engineerId:" + engineerId);
-//		System.out.println("============>lotteryId:" + lotteryId);
-//		System.out.println("============>lotteryTotailNum:" + lotteryTotailNum);
-        //S成功 E1已超过限制抽奖次数！E2 抽奖已结束,已达到抽奖次数。
-        String flag = "S";
-        Jedis jedis = JedisUtil.getJedis();
-        try{
-            //验证抽奖活动是否存在
-            if(jedis.get(lotteryId)!=null){
-
-                //验证抽奖活次数是否达到结束上限
-                if(Integer.valueOf(jedis.get(lotteryId)) >= lotteryTotailNum){
-                    return flag = "E2" ;
-                }
-            }
-            if(arr != null){
-                for (Rule rule : arr) {
-                    if (rule.getEngineerLevel() == lev) {
-
-                        //验证用户lev对应的抽奖次数是否消耗完毕  0:每天  , 1:每轮
-                        if (rule.getRestrictionType() == 0) {
-                            if (jedis.get(engineerId)!=null) {
-                                int lunNum =Integer.valueOf(jedis.get(engineerId));
-                                if(rule.getNum()<= lunNum){
-                                    flag ="E1";
-                                }
-                            }
-                        } else {
-                            if (jedis.get(lotteryId+engineerId)!=null) {
-                                int lunNum =Integer.valueOf(jedis.get(lotteryId+engineerId));
-                                if(rule.getNum()<= lunNum){
-                                    flag ="E1";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("VERIFY_NUM__RULE_ERROR_MSG=======================>" + e.getMessage());
-        } finally {
-        	JedisUtil.returnJedis(jedis);
-        }
-        return flag;
-    }
-
-
-
-    /**
-     * 变更符合过期时间的奖品
-     * @param data
-     * @param day
-     * @return
-     */
-    public static WinnerRecord[] winningBeOverdue(WinnerRecord[] data , int day ) {
-        Calendar ca = Calendar.getInstance();
-        // num为增加的天数，可以改变的
-        ca.add(Calendar.DATE, -day);
-        Date dateAfter = ca.getTime();
-        for (int i = 0; i < data.length; i++) {
-            Date date = data[i].getCreateTime();
-            if(dateAfter.after(date)){
-                data[i].setField2("2");
-            }
-        }
-        return data;
-    }
-
 }

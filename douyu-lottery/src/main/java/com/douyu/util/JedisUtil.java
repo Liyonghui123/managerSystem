@@ -15,19 +15,18 @@ import javax.annotation.PostConstruct;
 @Component
 public  class JedisUtil {
     @Autowired
-    private JedisPool testjedisPool;
+    private JedisPool testJedisPool;
     private static JedisPool jedisPool;
     @PostConstruct
     public void init(){
-        jedisPool = this.testjedisPool;
+        jedisPool = this.testJedisPool;
     }
     /**
      * 获取jedis
      * @return
      */
     public static Jedis getJedis(){
-        Jedis jedis = jedisPool.getResource();
-        return jedis;
+        return jedisPool.getResource();
     }
     public static void returnJedis(Jedis jedis){
         jedis.close();

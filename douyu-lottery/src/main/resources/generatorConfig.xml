@@ -58,6 +58,6 @@
         -->
 
 
-        <table tableName="lottery_user" domainObjectName="LotteryUser"></table>
+        <table tableName="lottery_level" domainObjectName="LotteryLevel"></table>
     </context>
 </generatorConfiguration>

@@ -7,68 +7,66 @@ import com.douyu.util.LotteryCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * @description:
  * @author: Dangerous
- * @time: 2020/3/12 11:51
+ * @time: 2020/3/14 16:43
  */
 @RestController
-@RequestMapping("/lottery")
-public class LotteryController {
+@RequestMapping("/user")
+public class UserController {
+
+    private final String EXCEED_LIMIT_TIME="E1";
+
+    private final String REACH_LOTTERY_TIME="E2";
+
     @Autowired
     private PrizeMapper prizeMapper;
     @Autowired
-    private LotteryManagementMapper lotteryManagementMapper;
-    @Autowired
-    private WinnerRecordMapper winnerRecordMapper;
-    @Autowired
     private LotteryUserMapper lotteryUserMapper;
     @Autowired
+    private LotteryManagementMapper lotteryManagementMapper;
+    @Autowired
     private LotteryLevelMapper lotteryLevelMapper;
+    @Autowired
+    private WinnerRecordMapper winnerRecordMapper;
 
-    @RequestMapping("/init/{lottetyId}")
-    public String init(@PathVariable String lottetyId) {
+    /**
+     * 开始抽奖
+     * @param lottetyId
+     * @param enginerrId
+     * @return
+     * @throws ParseException
+     */
+    @RequestMapping(value = "/start/{lottetyId}/{enginerrId}",method = RequestMethod.GET)
+    public String start(@PathVariable String lottetyId, @PathVariable String enginerrId){
 
-        Jedis jedis = JedisUtil.getJedis();
-        try{
-            jedis.flushAll();
-            Prize[] arr = initPrize(lottetyId);
-            LotteryManagement lotteryManagement=initLotteryManagement(lottetyId);
-
-            HashSet<Prize> set = new HashSet<>();
-
-            //计算总价值和中奖概率(存入)
-            LotteryCommon.calculation(arr, lotteryManagement);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            JedisUtil.returnJedis(jedis);
+        LotteryUser lotteryUser = lotteryUserMapper.selectByPrimaryKey(enginerrId);
+        if(lotteryUser==null){
+            return "你没有注册,不能抽奖";
         }
+        Integer userLevel=lotteryUser.getUserLevel();
+        List<LotteryLevel> lotteryLevels = lotteryLevelMapper.selectByExample(new LotteryLevelExample());
 
-        return "init ok";
-    }
-    @RequestMapping("/start/{lottetyId}/{enginerrId}")
-    public String start(@PathVariable String lottetyId,@PathVariable String enginerrId) throws ParseException {
-
-//        LotteryUser lotteryUser = lotteryUserMapper.selectByPrimaryKey(enginerrId);
-//        if(lotteryUser==null){
-//            return "你没有注册,不能抽奖";
-//        }
-//        Integer userLevel=lotteryUser.getUserLevel();
-//        LotteryLevel lotteryLevel = lotteryLevelMapper.selectByPrimaryKey(userLevel);
-//
-//        int limitTime=lotteryLevel.getLimitTime();
-
+        LotteryManagement lotteryManagement = lotteryManagementMapper.selectByPrimaryKey(lottetyId);
+        //抽奖总次数
+        Integer lotteryTotailNum = lotteryManagement.getLotteryTotailNum();
+        //S成功 E1已超过限制抽奖次数！E2 抽奖已结束,已达到抽奖次数。
+        String s = LotteryCommon.verifyNum(lotteryLevels, userLevel, enginerrId, lottetyId, lotteryTotailNum);
+        if(s.equals(EXCEED_LIMIT_TIME)){
+            return "已超过限制抽奖次数！";
+        }else if(s.equals(REACH_LOTTERY_TIME)){
+            return "E2 抽奖已结束,已达到抽奖次数";
+        }
 
         //抽奖
         WinnerRecord winnerRecord= luckDraw(lottetyId, enginerrId);
@@ -79,25 +77,6 @@ public class LotteryController {
         }else{
             return "非酋，快去洗洗手再来";
         }
-
-
-
-    }
-
-    private void saveWinnerRecord(WinnerRecord winnerRecord){
-        winnerRecordMapper.insert(winnerRecord);
-    }
-    private LotteryManagement initLotteryManagement(String lotteryId){
-        return lotteryManagementMapper.selectByPrimaryKey(lotteryId);
-    }
-
-    private  Prize[] initPrize(String lotteryId) {
-        PrizeExample example=new PrizeExample();
-        example.createCriteria().andLotteryIdEqualTo(lotteryId);
-
-        List<Prize> prizeList = prizeMapper.selectByExample(example);
-        Prize[] prizeArray=new Prize[prizeList.size()];
-        return prizeList.toArray(prizeArray);
     }
 
 
@@ -106,7 +85,7 @@ public class LotteryController {
      * @param lotteryId
      * @return
      */
-    public  WinnerRecord luckDraw(String lotteryId,String engineerId) throws ParseException {
+    private   WinnerRecord luckDraw(String lotteryId,String engineerId){
         Jedis jedis = JedisUtil.getJedis();
         Long index;
         Double id;
@@ -132,11 +111,10 @@ public class LotteryController {
                 jedis.zrem(LotteryCommon.PRIZE_LIST + lotteryId, index + "");
 
                 //数据库相关操作
-                String redeemCode=UUID.randomUUID().toString().replaceAll("-","");
+                String redeemCode= UUID.randomUUID().toString().replaceAll("-","");
                 Prize prize = prizeMapper.selectByPrimaryKey(id.intValue());
-                WinnerRecord winnerRecord = new WinnerRecord(id.toString(), redeemCode, prize.getPrizeName(),
+                return new WinnerRecord(id.toString(), redeemCode, prize.getPrizeName(),
                         engineerId, engineerId, 1, new Timestamp(System.currentTimeMillis()));
-                return winnerRecord;
             }
 
         } catch (Exception e) {
@@ -144,17 +122,22 @@ public class LotteryController {
         } finally {
             JedisUtil.returnJedis(jedis);
         }
-
         return null;
-
+    }
+    /**
+     * 保存中奖记录
+     * @param winnerRecord
+     */
+    private void saveWinnerRecord(WinnerRecord winnerRecord){
+        winnerRecordMapper.insert(winnerRecord);
     }
 
     /**
-     * 保存抽奖记录
+     * 更新抽奖管理信息
      * @param lotteryId
      * @return
      */
-    public  void saveLotteryManagement(String lotteryId) {
+    private void saveLotteryManagement(String lotteryId) {
         Jedis jedis = JedisUtil.getJedis();
         try {
             LotteryManagement lotteryManagement = lotteryManagementMapper.selectByPrimaryKey(lotteryId);
@@ -172,9 +155,7 @@ public class LotteryController {
         } catch (Exception e) {
             throw new RuntimeException("SAVE_LOTTERY_MANAGEMENT_ERROR_MSG");
         } finally {
-           JedisUtil.returnJedis(jedis);
+            JedisUtil.returnJedis(jedis);
         }
     }
-
-
 }

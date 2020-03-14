@@ -6,14 +6,13 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 @Repository
 public interface LotteryLevelMapper {
     int countByExample(LotteryLevelExample example);
 
     int deleteByExample(LotteryLevelExample example);
 
-    int deleteByPrimaryKey(Integer lotteryId);
+    int deleteByPrimaryKey(Integer levelId);
 
     int insert(LotteryLevel record);
 
@@ -21,7 +20,7 @@ public interface LotteryLevelMapper {
 
     List<LotteryLevel> selectByExample(LotteryLevelExample example);
 
-    LotteryLevel selectByPrimaryKey(Integer lotteryId);
+    LotteryLevel selectByPrimaryKey(Integer levelId);
 
     int updateByExampleSelective(@Param("record") LotteryLevel record, @Param("example") LotteryLevelExample example);
 
@@ -30,6 +29,4 @@ public interface LotteryLevelMapper {
     int updateByPrimaryKeySelective(LotteryLevel record);
 
     int updateByPrimaryKey(LotteryLevel record);
-
-
 }
