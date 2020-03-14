@@ -17,7 +17,10 @@ public class LotteryCommon {
     private static final String PRIZE_RULE = "prizeRule";
     public static final String PRIZE_LIST = "prizeList";
 
-
+    public static final String EXCEED_LIMIT_TIME="E1";
+    public static final String REACH_LOTTERY_TIME="E2";
+    public static final String NO_LOTTERY_AUTHORITY_ASSIGNED="E3";
+    public static final String LOTTERY_SUCCESS="S";
     /**
      * 计算总价值和中奖概率
      * @param arr  奖品数组
@@ -210,7 +213,7 @@ public class LotteryCommon {
     //S成功 E1已超过限制抽奖次数！E2 抽奖已结束,已达到抽奖次数。
      */
     public  static String verifyNum(List<LotteryLevel> arr , int lev , String engineerId , String lotteryId, int lotteryTotailNum) {
-        String flag = "S";
+        String flag = NO_LOTTERY_AUTHORITY_ASSIGNED;
         Jedis jedis = JedisUtil.getJedis();
         try{
             //验证抽奖活动是否存在
@@ -218,23 +221,32 @@ public class LotteryCommon {
 
                 //验证抽奖活次数是否达到结束上限
                 if(Integer.valueOf(jedis.get(lotteryId)) >= lotteryTotailNum){
-                    flag = "E2";
+                    flag = REACH_LOTTERY_TIME;
                     return  flag;
                 }
             }
+
             if(arr != null){
                 for (LotteryLevel rule : arr) {
                     if (rule.getLevelId() == lev) {
                         if (jedis.get(lotteryId+engineerId)!=null) {
                             int lunNum =Integer.valueOf(jedis.get(lotteryId+engineerId));
                             if(rule.getLimitTime()<= lunNum){
-                                flag ="E1";
+                                return EXCEED_LIMIT_TIME;
                             }
                         }
 
                     }
                 }
             }
+            for (LotteryLevel lotteryLevel : arr) {
+                if(lotteryLevel.getLevelId()==lev){
+                    return LOTTERY_SUCCESS;
+                }
+            }
+
+
+
         } catch (Exception e) {
             throw new RuntimeException("VERIFY_NUM__RULE_ERROR_MSG=======================>" + e.getMessage());
         } finally {

@@ -25,9 +25,7 @@ import java.util.UUID;
 @RequestMapping("/user")
 public class UserController {
 
-    private final String EXCEED_LIMIT_TIME="E1";
 
-    private final String REACH_LOTTERY_TIME="E2";
 
     @Autowired
     private PrizeMapper prizeMapper;
@@ -60,12 +58,15 @@ public class UserController {
         LotteryManagement lotteryManagement = lotteryManagementMapper.selectByPrimaryKey(lottetyId);
         //抽奖总次数
         Integer lotteryTotailNum = lotteryManagement.getLotteryTotailNum();
+
         //S成功 E1已超过限制抽奖次数！E2 抽奖已结束,已达到抽奖次数。
         String s = LotteryCommon.verifyNum(lotteryLevels, userLevel, enginerrId, lottetyId, lotteryTotailNum);
-        if(s.equals(EXCEED_LIMIT_TIME)){
+        if(s.equals(LotteryCommon.EXCEED_LIMIT_TIME)){
             return "已超过限制抽奖次数！";
-        }else if(s.equals(REACH_LOTTERY_TIME)){
-            return "E2 抽奖已结束,已达到抽奖次数";
+        }else if(s.equals(LotteryCommon.REACH_LOTTERY_TIME)){
+            return "抽奖已结束,已达到抽奖次数";
+        }else if (s.equals(LotteryCommon.NO_LOTTERY_AUTHORITY_ASSIGNED)){
+            return "您还没有抽奖权限";
         }
 
         //抽奖
@@ -92,6 +93,8 @@ public class UserController {
         try {
 
             index = jedis.incr(lotteryId);
+            //每个轮询的次数
+            jedis.incr(lotteryId + engineerId);
 
             id = jedis.zscore(LotteryCommon.PRIZE_LIST + lotteryId, index.intValue()+"");
 
@@ -103,9 +106,6 @@ public class UserController {
                 } else {
                     jedis.incr(engineerId);
                 }
-
-                //每个轮询的次数
-                jedis.incr(lotteryId + engineerId);
 
                 //删除缓存奖品
                 jedis.zrem(LotteryCommon.PRIZE_LIST + lotteryId, index + "");
