@@ -1,0 +1,10 @@
+server:
+  port: 8093
+  context-path: /
+spring:
+  dubbo:
+    appname: consumer-test
+    registry: zookeeper://localhost:2181
+    protocol: zookeeper
+  session:
+    store-type: none

@@ -1,11 +1,15 @@
 package com.douyu.controller;
 
-import com.douyu.dao.LotteryManagementMapper;
 import com.douyu.pojo.LotteryLevel;
 import com.douyu.pojo.LotteryManagement;
 import com.douyu.pojo.LotteryManagementExample;
+import com.douyu.service.LotteryManagementService;
 import com.douyu.util.LotteryCommon;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,25 +25,27 @@ import java.util.List;
  */
 
 @RestController
+@Api(tags = "管理员相关接口")
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
-    private LotteryManagementMapper lotteryManagementMapper;
+    private LotteryManagementService lotteryManagementService;
 
     /**
      * 获取有效活动
      * @return
      */
-    @RequestMapping(value ="/getEffectiveLotteryId",method = RequestMethod.GET)
-    public String  getEffectiveLotteryId() {
-        List<LotteryManagement> lotteryManagements = lotteryManagementMapper.selectByExample(new LotteryManagementExample());
+    @ApiOperation(value = "getEffectiveLotteryId", notes = "获取有效活动Id")
+    @RequestMapping(value ="/getEffectiveLotteryId",method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> getEffectiveLotteryId() {
+        List<LotteryManagement> lotteryManagements = lotteryManagementService.selectByExample(new LotteryManagementExample());
         LotteryManagement[] strings = new LotteryManagement[lotteryManagements.size()];
         lotteryManagements.toArray(strings);
         HashMap<String, String> lotteryId = LotteryCommon.getLotteryId(strings);
         if(lotteryId==null){
-            return "暂无活动";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return lotteryId.toString();
+        return ResponseEntity.ok(lotteryId);
     }
 
     /**
@@ -47,8 +53,13 @@ public class AdminController {
      * @param lotteryId
      * @return
      */
+    @ApiOperation(value = "queryRuleList", notes = "查询权限种类")
     @RequestMapping(value = "/queryRuleList/{lotteryId}",method = RequestMethod.GET)
-    public LotteryLevel[] queryRuleList(@PathVariable String lotteryId) {
-        return LotteryCommon.queryRuleList(lotteryId);
+    public ResponseEntity<LotteryLevel[]> queryRuleList(@PathVariable String lotteryId) {
+        LotteryLevel[] lotteryLevels = LotteryCommon.queryRuleList(lotteryId);
+        if(lotteryLevels==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(lotteryLevels);
     }
 }

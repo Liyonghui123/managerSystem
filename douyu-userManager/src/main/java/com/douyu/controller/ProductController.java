@@ -2,6 +2,7 @@ package com.douyu.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class ProductController {
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "currentUser",notes = "当前用户")
-    String currentUser() {
+    public ResponseEntity currentUser() {
         String currentUser = "";
         Object principl = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principl instanceof UserDetails) {
@@ -29,6 +30,6 @@ public class ProductController {
         }else {
             currentUser = principl.toString();
         }
-        return " some product info,currentUser is: "+currentUser;
+        return ResponseEntity.ok(" some product info,currentUser is: "+currentUser);
     }
 }

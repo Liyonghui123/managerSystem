@@ -16,7 +16,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * @time: 2020/3/10 12:22
  */
 @Configuration
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:application-apollo-replace.yml")
 public class RedisConfig extends CachingConfigurerSupport {
     private Logger logger = LoggerFactory.getLogger(RedisConfig.class);
     @Value("${spring.redis.host}")

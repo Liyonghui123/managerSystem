@@ -1,7 +1,7 @@
 package com.douyu.controller;
 
-import com.douyu.dao.UserMapper;
 import com.douyu.pojo.User;
+import com.douyu.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
 @Api(tags = "用户管理相关接口")
 public class UserController {
     @Autowired
-    UserMapper userMapper;
+    private UserService userService;
     /**
      * 新增客户
      * @param user
@@ -33,7 +33,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> saveUser(User user){
         try {
-            userMapper.insert(user);
+            userService.insert(user);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<Void> updateUser(User user){
         try {
-            userMapper.updateByPrimaryKey(user);
+            userService.updateByPrimaryKey(user);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class UserController {
             if(id.intValue()==0){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            userMapper.deleteByPrimaryKey(id);
+            userService.deleteByPrimaryKey(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -91,7 +91,7 @@ public class UserController {
             String[] stringIds=ids.split(",");
             for(int i=0;i<stringIds.length;i++){
                 Long id=Long.parseLong(stringIds[i]);
-                User user = userMapper.selectByPrimaryKey(id);
+                User user = userService.selectByPrimaryKey(id);
                 users.add(user);
             }
             if(null==users){

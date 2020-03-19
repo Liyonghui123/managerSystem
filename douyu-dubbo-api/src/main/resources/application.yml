@@ -1,0 +1,8 @@
+spring:
+  dubbo:
+    appname: provider-test
+    registry: zookeeper://localhost:2181
+    protocol: dubbo
+    port: 20880
+server:
+  port: 8092

@@ -1,7 +1,7 @@
 package com.douyu.controller;
 
-import com.douyu.dao.UserMapper;
 import com.douyu.pojo.User;
+import com.douyu.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ public class AdminController {
     private String defaultPassword;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @RequestMapping(value = "/indexPage", method = RequestMethod.GET)
     @ApiOperation(value = "indexPage", notes = "管理员首页")
     @ResponseBody
-    public String indexPage() {
-        return " admin home page ";
+    public ResponseEntity indexPage() {
+        return ResponseEntity.ok(" admin home page ");
     }
 
 
@@ -41,12 +41,12 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Void> resetPassword(Long id) {
         try {
-            User user = userMapper.selectByPrimaryKey(id);
+            User user = userService.selectByPrimaryKey(id);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             } else {
                 user.setUserPassword(defaultPassword);
-                userMapper.updateByPrimaryKey(user);
+                userService.updateByPrimaryKey(user);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
         } catch (Exception e) {

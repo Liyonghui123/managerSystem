@@ -11,6 +11,11 @@
     <modules>
         <module>douyu-userManager</module>
         <module>douyu-lottery</module>
+        <module>douyu-xxljob</module>
+        <module>douyu-dubbo-api</module>
+        <module>douyu-dubbo-provider</module>
+        <module>douyu-dubbo-consumer</module>
+        <module>douyu-rocketmq</module>
     </modules>
 
     <parent>
@@ -89,36 +94,63 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session</artifactId>
         </dependency>
-        <!--&lt;!&ndash;dubbo&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba</groupId>-->
-            <!--<artifactId>dubbo</artifactId>-->
-            <!--<version>2.6.7</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash;rocketmq&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.rocketmq</groupId>-->
-            <!--<artifactId>rocketmq-client</artifactId>-->
-            <!--<version>4.6.1</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash;sentinel&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba.csp</groupId>-->
-            <!--<artifactId>sentinel-core</artifactId>-->
-            <!--<version>1.7.1</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash;apollo&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.ctrip.framework.apollo</groupId>-->
-            <!--<artifactId>apollo-client</artifactId>-->
-            <!--<version>1.5.1</version>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash;xxl job&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.xuxueli</groupId>-->
-            <!--<artifactId>xxl-job-core</artifactId>-->
-            <!--<version>2.1.2</version>-->
-        <!--</dependency>-->
+        <!--apollo-->
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <!--sentinel-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-annotation-aspectj</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-core</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-transport-simple-http</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <!--xxl job-->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <!--dubbo-->
+        <dependency>
+            <groupId>com.alibaba.spring.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <!--zookeeper依赖-->
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.10</version>
+        </dependency>
+        <!--rocketmq-->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.0.3</version>
+        </dependency>
     </dependencies>
 
 

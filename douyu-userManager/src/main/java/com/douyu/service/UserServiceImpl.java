@@ -32,7 +32,27 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<Role> selectRoleByUserName(String userName) {
 
-        return this.userMapper.selectRoleByUserName(userName);
+        return userMapper.selectRoleByUserName(userName);
+    }
+
+    @Override
+    public User selectByPrimaryKey(Long id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void updateByPrimaryKey(User user) {
+        userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public void insert(User user) {
+        userMapper.insert(user);
+    }
+
+    @Override
+    public void deleteByPrimaryKey(Long id) {
+        userMapper.deleteByPrimaryKey(id);
     }
 
 

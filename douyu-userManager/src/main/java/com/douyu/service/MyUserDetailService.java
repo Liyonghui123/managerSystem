@@ -34,7 +34,6 @@ public class MyUserDetailService implements UserDetailsService {
         if(user==null){
             return null;
         }
-        //String password = passwordEncoder.encode(user.getUserPassword());
         String password=user.getUserPassword();
         return new org.springframework.security.core.userdetails.User(userName,password, authorities(userName));
     }

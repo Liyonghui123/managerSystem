@@ -1,8 +1,8 @@
 package com.douyu.controller;
 
-import com.douyu.dao.UserRoleMapper;
 import com.douyu.pojo.UserRoleExample;
 import com.douyu.pojo.UserRoleKey;
+import com.douyu.service.UserRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/assign")
 public class AssignRollComtroller {
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserRoleService userRoleService;
     /**
      * 分配角色
      * @param userRole
@@ -33,7 +33,7 @@ public class AssignRollComtroller {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> saveRole(UserRoleKey userRole){
         try {
-            userRoleMapper.insert(userRole);
+            userRoleService.insert(userRole);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class AssignRollComtroller {
             if(id==null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            userRoleMapper.deleteByPrimaryKey(id);
+            userRoleService.deleteByPrimaryKey(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class AssignRollComtroller {
                 UserRoleExample userRoleExample=new UserRoleExample();
                 userRoleExample.createCriteria().andRoleIdEqualTo(id);
 
-                List<UserRoleKey> userRole = userRoleMapper.selectByExample(userRoleExample);
+                List<UserRoleKey> userRole = userRoleService.selectByExample(userRoleExample);
                 userRoles.add(userRole);
             }
             if(null==userRoles){

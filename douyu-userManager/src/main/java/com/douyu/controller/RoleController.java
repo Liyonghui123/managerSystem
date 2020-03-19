@@ -1,7 +1,10 @@
 package com.douyu.controller;
 
-import com.douyu.dao.RoleMapper;
 import com.douyu.pojo.Role;
+import com.douyu.pojo.UserRoleExample;
+import com.douyu.pojo.UserRoleKey;
+import com.douyu.service.RoleService;
+import com.douyu.service.UserRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,9 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleService roleService;
+    @Autowired
+    private UserRoleService userRoleService;
     /**
      *
      * @param role
@@ -33,7 +38,7 @@ public class RoleController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> saveRole(Role role){
         try {
-            roleMapper.insert(role);
+            roleService.insert(role);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -49,7 +54,7 @@ public class RoleController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<Void> updateRole(Role role){
         try {
-            roleMapper.updateByPrimaryKey(role);
+            roleService.updateByPrimaryKey(role);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -65,12 +70,18 @@ public class RoleController {
     //TODO 考虑先查询角色当前是否含有用户
     @ApiOperation(value = "deleteRole",notes = "删除角色")
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteRole(@RequestParam(value = "id",defaultValue = "0")Long id ){
+    public ResponseEntity<String> deleteRole(@RequestParam(value = "id",defaultValue = "0")Long id ){
         try {
             if(id.intValue()==0){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            roleMapper.deleteByPrimaryKey(id);
+            UserRoleExample userRoleExample=new UserRoleExample();
+            userRoleExample.createCriteria().andRoleIdEqualTo(id);
+            List<UserRoleKey> userRoleKeys = userRoleService.selectByExample(userRoleExample);
+            if(userRoleKeys!=null){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("还存在该角色的用户，不能删除!");
+            }
+            roleService.deleteByPrimaryKey(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (Exception e){
             e.printStackTrace();
@@ -91,7 +102,7 @@ public class RoleController {
             String[] stringIds=ids.split(",");
             for(int i=0;i<stringIds.length;i++){
                 Long id=Long.parseLong(stringIds[i]);
-                Role role = roleMapper.selectByPrimaryKey(id);
+                Role role = roleService.selectByPrimaryKey(id);
                 roles.add(role);
             }
             if(null==roles){
