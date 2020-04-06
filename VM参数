@@ -1,0 +1,8 @@
+#Sentinel
+-Denv=DEV
+-Dapollo.cacheDir=./apollo-config-lottery
+-Dapollo.cluster=DEFAULT
+-Dproject.name=lottery
+-Dcsp.sentinel.dashboard.server=localhost:8083
+#Apollo
+-Denv=DEV  -Dapollo.cacheDir=E:/software/appllo/apollo-quick-start-1.5.0/data/apollo-config  -Dapollo.cluster=DEFAULT
