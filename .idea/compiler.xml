@@ -11,6 +11,7 @@
         <module name="douyu-dubbo-provider" />
         <module name="douyu-lottery" />
         <module name="douyu-rocketmq" />
+        <module name="douyu-sharding-jdbc" />
         <module name="douyu-userManager" />
         <module name="douyu-xxljob" />
         <module name="dubbo-admin-distribution" />
@@ -18,38 +19,16 @@
         <module name="dubbo-admin-ui" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="parent" target="1.7" />
-      <module name="rocketmq-console-ng" target="1.7" />
-      <module name="xxl-job" target="1.7" />
-      <module name="xxl-job-admin" target="1.8" />
-      <module name="xxl-job-core" target="1.7" />
-      <module name="xxl-job-executor-sample-frameless" target="1.7" />
-      <module name="xxl-job-executor-sample-jboot" target="1.7" />
-      <module name="xxl-job-executor-sample-jfinal" target="1.7" />
-      <module name="xxl-job-executor-sample-nutz" target="1.7" />
-      <module name="xxl-job-executor-sample-spring" target="1.7" />
-      <module name="xxl-job-executor-sample-springboot" target="1.7" />
-      <module name="xxl-job-executor-samples" target="1.7" />
-      <module name="zookeeper" target="1.7" />
-      <module name="zookeeper-assembly" target="1.7" />
-      <module name="zookeeper-client" target="1.7" />
-      <module name="zookeeper-docs" target="1.7" />
-      <module name="zookeeper-jute" target="1.7" />
-      <module name="zookeeper-recipes" target="1.7" />
-      <module name="zookeeper-recipes-election" target="1.7" />
-      <module name="zookeeper-recipes-lock" target="1.7" />
-      <module name="zookeeper-recipes-queue" target="1.7" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="zookeeper" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
-      <module name="zookeeper-docs" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
-      <module name="zookeeper-jute" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
-      <module name="zookeeper-recipes-election" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
-      <module name="zookeeper-recipes-lock" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
-      <module name="zookeeper-recipes-queue" options="-Werror -Xlint:deprecation -Xlint:unchecked -Xlint:-options -Xdoclint:-missing -Xpkginfo:always" />
+      <module name="douyu-dubbo-api" options="" />
+      <module name="douyu-dubbo-consumer" options="" />
+      <module name="douyu-dubbo-provider" options="" />
+      <module name="douyu-lottery" options="" />
+      <module name="douyu-rocketmq" options="" />
+      <module name="douyu-userManager" options="" />
+      <module name="douyu-xxljob" options="" />
     </option>
   </component>
 </project>
