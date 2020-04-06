@@ -1,4 +1,4 @@
-package com.douyu.config;
+package com.douyu.demo;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;

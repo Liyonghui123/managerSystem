@@ -16,11 +16,13 @@
         <module>douyu-dubbo-provider</module>
         <module>douyu-dubbo-consumer</module>
         <module>douyu-rocketmq</module>
+        <module>douyu-sharding-jdbc</module>
     </modules>
 
     <parent>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-parent</artifactId>
+            <!--<version>2.1.4.RELEASE</version>-->
             <version>1.5.22.RELEASE</version>
     </parent>
     <dependencies>
@@ -144,13 +146,22 @@
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
-            <version>4.6.1</version>
+            <version>4.2.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
-            <version>2.0.3</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.shardingsphere</groupId>-->
+            <!--<artifactId>sharding-jdbc-spring-boot-starter</artifactId>-->
+            <!--<version>3.1.0.M1</version>-->
+        <!--</dependency>-->
+        <!---->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security.oauth</groupId>-->
+            <!--<artifactId>spring-security-oauth2</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-jwt</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 
 

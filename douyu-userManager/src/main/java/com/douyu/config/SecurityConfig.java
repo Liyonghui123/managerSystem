@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @time: 2020/3/8 14:46
  */
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_WHITELIST = {
 
             // -- swagger ui
